@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deney Defteri — Sürdürülebilir Hünkar Beğendi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF6F4;--card:#FFFFFF;--ink:#241C27;--muted:#7A6E7D;--line:#E7DDE6;
+    --aubergine:#5E2E63;--aubergine-2:#8A4790;--aubergine-soft:#F3EAF4;
+    --mushroom:#C9A98C;--verified:#2E7D5B;--danger:#B23A48;--warn:#B9791C;--warn-soft:#FBF1DE;
+    --shadow:0 1px 2px rgba(48,26,50,.06),0 8px 24px rgba(48,26,50,.06);
+    --disp:'Space Grotesk',system-ui,-apple-system,sans-serif;
+    --body:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--aubergine-2)}
+  button{font-family:inherit;cursor:pointer}
+  ::selection{background:var(--aubergine-soft)}
+
+  header{background:linear-gradient(160deg,#4A2350 0%,#5E2E63 55%,#743a7a 100%);color:#fff;padding:22px 26px;position:relative;overflow:hidden}
+  header::after{content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;background:radial-gradient(circle at center,rgba(201,169,140,.30),transparent 70%)}
+  .h-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#D9BBDD;margin:0 0 6px}
+  header h1{font-family:var(--disp);font-weight:700;font-size:22px;margin:0;letter-spacing:-.01em}
+  header p{margin:4px 0 0;color:#E4CFE6;font-size:13px}
+  .h-actions{position:absolute;right:22px;top:22px;display:flex;gap:8px;z-index:2}
+  .h-actions button{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;padding:7px 12px;border-radius:8px;font-size:12px;font-weight:500;transition:.15s}
+  .h-actions button:hover{background:rgba(255,255,255,.22)}
+
+  nav{display:flex;gap:2px;padding:0 14px;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto;position:sticky;top:0;z-index:20}
+  .tab{border:none;background:none;padding:14px 15px 12px;font-size:13px;font-weight:500;color:var(--muted);border-bottom:2.5px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:7px;transition:.15s}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--aubergine);border-bottom-color:var(--aubergine)}
+  .tab .cnt{font-family:var(--mono);font-size:10px;background:var(--aubergine-soft);color:var(--aubergine);padding:1px 6px;border-radius:20px;font-weight:600}
+
+  main{max-width:1180px;margin:0 auto;padding:24px 22px 80px}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .panel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+  .panel-head h2{font-family:var(--disp);font-size:19px;margin:0 0 3px;font-weight:600;letter-spacing:-.01em}
+  .panel-head .desc{color:var(--muted);font-size:13px;max-width:660px;margin:0}
+  .head-btns{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 14px;border-radius:9px;font-size:13px;font-weight:500;transition:.15s}
+  .btn:hover{border-color:var(--aubergine-2);color:var(--aubergine)}
+  .btn.primary{background:var(--aubergine);color:#fff;border-color:var(--aubergine)}
+  .btn.primary:hover{background:#4c2551;color:#fff}
+  .btn.ghost{background:none}
+  .btn.sm{padding:6px 10px;font-size:12px}
+
+  .tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{text-align:left;padding:11px 13px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;background:#FBF8FB;border-bottom:1px solid var(--line);white-space:nowrap}
+  tbody td{padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#FCFAFC}
+  .code-badge{font-family:var(--mono);font-weight:600;font-size:12px;color:var(--aubergine);background:var(--aubergine-soft);padding:3px 9px;border-radius:6px;display:inline-block}
+  .date-cell{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+  .muted-cell{color:var(--muted)}
+  .num{font-family:var(--mono);white-space:nowrap}
+  .row-actions{display:flex;gap:4px;justify-content:flex-end}
+  .icon-btn{border:none;background:none;padding:5px;border-radius:6px;color:var(--muted);font-size:13px;line-height:1;transition:.15s}
+  .icon-btn:hover{background:var(--aubergine-soft);color:var(--aubergine)}
+  .icon-btn.del:hover{background:#FBEAEC;color:var(--danger)}
+  .empty{padding:44px 20px;text-align:center;color:var(--muted)}
+  .empty .big{font-size:30px;margin-bottom:8px;opacity:.5}
+  .empty p{margin:2px 0}
+  .tag{font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:5px;background:#F0EDF1;color:var(--muted)}
+  .mini{font-size:12px;color:var(--muted);line-height:1.4}
+  .mini b{color:var(--ink);font-weight:600}
+  .warn-inline{color:var(--warn);font-size:11px}
+
+  .overlay{position:fixed;inset:0;background:rgba(36,20,40,.42);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;padding:36px 16px;z-index:100;overflow-y:auto}
+  .overlay.open{display:flex}
+  #overlay2{z-index:120}
+  .modal{background:var(--card);border-radius:16px;width:100%;max-width:680px;box-shadow:0 20px 60px rgba(36,20,40,.3);animation:pop .2s ease}
+  .modal.narrow{max-width:520px}
+  @keyframes pop{from{opacity:0;transform:scale(.97) translateY(8px)}to{opacity:1;transform:none}}
+  .modal-head{padding:20px 24px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal-head h3{font-family:var(--disp);margin:0;font-size:17px;font-weight:600}
+  .modal-body{padding:20px 24px;max-height:66vh;overflow-y:auto}
+  .modal-foot{padding:14px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px;background:#FCFAFC;border-radius:0 0 16px 16px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid.g3{grid-template-columns:1fr 1fr 1fr}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+  .field.full{grid-column:1/-1}
+  .field label{font-size:12px;font-weight:600;color:var(--ink)}
+  .field .hint{font-size:11px;color:var(--muted);font-weight:400}
+  input,select,textarea{font-family:inherit;font-size:13px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);width:100%;transition:.15s}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--aubergine-2);background:#fff;box-shadow:0 0 0 3px var(--aubergine-soft)}
+  textarea{resize:vertical;min-height:60px}
+  .mono-in{font-family:var(--mono);font-weight:600}
+  .section-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aubergine);margin:6px 0 12px;padding-top:14px;border-top:1px dashed var(--line)}
+  .section-label:first-child{border-top:none;padding-top:0}
+
+  .rep-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+  .rep-row input{flex:1}
+  .rep-row .g{max-width:110px;flex:none}
+  .rep-row .rm{border:none;background:#FBEAEC;color:var(--danger);border-radius:8px;padding:8px 10px;font-size:12px}
+  .add-line{background:none;border:1px dashed var(--line);color:var(--aubergine);padding:8px;border-radius:9px;width:100%;font-size:12px;font-weight:500;margin-top:2px}
+  .add-line:hover{border-color:var(--aubergine-2);background:var(--aubergine-soft)}
+
+  .score-grid{display:grid;grid-template-columns:1.3fr repeat(6,1fr);gap:6px;align-items:center;margin-bottom:6px}
+  .score-grid input{padding:7px 6px;text-align:center}
+  .score-grid input:first-child{text-align:left}
+  .score-head{font-size:10px;color:var(--muted);text-align:center;font-weight:600}
+  .score-head:first-child{text-align:left}
+
+  /* computed box in formulation modal */
+  .calc-box{background:var(--aubergine-soft);border:1px solid #E4D2E6;border-radius:12px;padding:14px 16px;margin-top:6px}
+  .calc-box h4{margin:0 0 10px;font-family:var(--disp);font-size:13px;color:var(--aubergine);display:flex;align-items:center;gap:6px}
+  .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px}
+  .stat{background:#fff;border-radius:9px;padding:9px 11px;border:1px solid #EFE1F0}
+  .stat .k{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+  .stat .v{font-family:var(--mono);font-weight:600;font-size:15px;color:var(--ink);margin-top:2px}
+  .stat .u{font-size:10px;color:var(--muted);font-weight:400}
+  .calc-missing{margin-top:10px;font-size:12px;color:var(--warn);background:var(--warn-soft);border:1px solid #F0DCB4;border-radius:9px;padding:9px 11px}
+  .calc-missing b{color:var(--warn)}
+  .chip-add{border:1px solid var(--warn);background:#fff;color:var(--warn);border-radius:20px;padding:2px 9px;font-size:11px;font-weight:600;margin:2px 3px 0 0;display:inline-block}
+  .chip-add:hover{background:var(--warn);color:#fff}
+
+  #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--ink);color:#fff;padding:11px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:200;transition:.25s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .footnote{margin-top:14px;font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:flex-start}
+  .footnote span{color:var(--aubergine)}
+  .seed-note{background:var(--warn-soft);border:1px solid #F0DCB4;border-radius:10px;padding:10px 13px;font-size:12px;color:#8a5a12;margin-bottom:16px}
+
+  /* Report */
+  .report-pick{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:18px}
+  .report-pick .field{margin:0;min-width:220px}
+  #reportOutput{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:30px 34px}
+  #reportOutput h3{font-family:var(--disp);font-size:20px;margin:0 0 2px}
+  #reportOutput .rep-sub{color:var(--muted);font-size:13px;margin:0 0 18px}
+  #reportOutput .rep-sec{margin:22px 0 8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--aubergine);border-top:1px solid var(--line);padding-top:16px}
+  #reportOutput table{margin-top:4px}
+  #reportOutput .kv{display:grid;grid-template-columns:180px 1fr;gap:4px 14px;font-size:13px}
+  #reportOutput .kv dt{color:var(--muted)}
+  #reportOutput .kv dd{margin:0;font-weight:500}
+  .rep-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:6px}
+  .rep-stats .stat{background:#FBF8FB}
+  .rep-warn{color:var(--warn);font-size:12px;margin-top:6px}
+
+  @media(max-width:640px){
+    .grid,.grid.g3,.score-grid{grid-template-columns:1fr}
+    .score-grid{border:1px solid var(--line);padding:10px;border-radius:10px}
+    .score-head{display:none}
+    .h-actions{position:static;margin-top:12px}
+    header{padding-bottom:16px}
+    #reportOutput{padding:20px}
+    #reportOutput .kv{grid-template-columns:1fr}
+  }
+  @media print{
+    header,nav,.panel-head,.report-pick,.h-actions,#toast,.footnote{display:none!important}
+    body{background:#fff}
+    main{padding:0;max-width:none}
+    #reportOutput{border:none;box-shadow:none;padding:0}
+    .panel:not(.active){display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-actions">
+    <button onclick="exportAllJSON()">↧ Yedek (JSON)</button>
+    <button onclick="document.getElementById('importFile').click()">↥ Geri yükle</button>
+    <input type="file" id="importFile" accept=".json" hidden onchange="importJSON(event)">
+  </div>
+  <p class="h-eyebrow">TÜBİTAK 2209-A · Deney Kayıt Defteri</p>
+  <h1>Sürdürülebilir Hünkar Beğendi</h1>
+  <p>İstiridye mantarı & tirmis fasulyesi ile ürün geliştirme kayıtları</p>
+</header>
+
+<nav id="tabs"></nav>
+
+<main>
+  <!-- MALZEME KÜTÜPHANESİ -->
+  <section class="panel active" data-panel="malzeme">
+    <div class="panel-head">
+      <div>
+        <h2>Malzeme kütüphanesi</h2>
+        <p class="desc">Her malzemenin besin değerini (100 g başına) ve çevre faktörlerini (kg başına CO₂ / su) bir kez gir. Formülasyona bu malzemeleri koyduğunda besin, LCA ve maliyet otomatik hesaplanır. Her değer için kaynak yaz — TÜBİTAK'ta savunman gerekecek.</p>
+      </div>
+      <div class="head-btns">
+        <button class="btn ghost" onclick="exportCSV('malzeme')">CSV</button>
+        <button class="btn primary" onclick="openIng()">+ Malzeme ekle</button>
+      </div>
+    </div>
+    <div class="seed-note" id="seedNote">⚠ Başlangıç için birkaç malzeme örnek besin değeriyle eklendi. Bunlar taslaktır — <b>kendi kaynağınla doğrula ve CO₂/su faktörleri ile fiyatları gir.</b></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr>
+        <th>Malzeme</th><th>Protein</th><th>Yağ</th><th>Karbonhidrat</th><th>Lif</th><th>Enerji</th><th>CO₂ faktörü</th><th>Su faktörü</th><th>Fiyat</th><th>Kaynak</th><th></th>
+      </tr></thead>
+      <tbody id="tb-malzeme"></tbody>
+    </table></div>
+    <div class="footnote"><span>◆</span> Besin değerleri 100 g başına; CO₂ (kg CO₂e/kg), su (L/kg) ve fiyat (₺/kg) kilogram başına girilir.</div>
+  </section>
+
+  <!-- FORMÜLASYONLAR -->
+  <section class="panel" data-panel="formul">
+    <div class="panel-head">
+      <div>
+        <h2>Formülasyonlar</h2>
+        <p class="desc">Örnek kodu ver (HB-01…), malzemeleri kütüphaneden seç ve gram gir. Besin değeri ve LCA anında hesaplanır. Kütüphanede olmayan malzeme uyarıyla gösterilir; tek tıkla ekleyebilirsin.</p>
+      </div>
+      <div class="head-btns">
+        <button class="btn ghost" onclick="exportCSV('formul')">CSV</button>
+        <button class="btn primary" onclick="openForm('formul')">+ Formülasyon ekle</button>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr>
+        <th>Kod</th><th>Tarih</th><th>Açıklama</th><th>Malzemeler</th><th>Besin / porsiyon</th><th>LCA / porsiyon</th><th>Sonuç</th><th></th>
+      </tr></thead>
+      <tbody id="tb-formul"></tbody>
+    </table></div>
+    <div class="footnote"><span>◆</span> "Sonuç / not" alanına neyin işe yaramadığını yaz — bir sonraki denemeyi bu belirler.</div>
+  </section>
+
+  <!-- DUYUSAL -->
+  <section class="panel" data-panel="duyusal">
+    <div class="panel-head">
+      <div>
+        <h2>Duyusal analiz</h2>
+        <p class="desc">Panelistlerin HAM puanlarını tek tek gir (ortalama değil). ANOVA için her panelistin her örneğe verdiği puan lazım. CSV her satırı ayrı yazar; doğrudan SPSS'e alabilirsin.</p>
+      </div>
+      <div class="head-btns">
+        <button class="btn ghost" onclick="exportCSV('duyusal')">CSV (uzun format)</button>
+        <button class="btn primary" onclick="openForm('duyusal')">+ Oturum ekle</button>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Kod</th><th>Tarih</th><th>Test tipi</th><th>Panelist</th><th>Ort. genel</th><th>Koşullar</th><th></th></tr></thead>
+      <tbody id="tb-duyusal"></tbody>
+    </table></div>
+  </section>
+
+  <!-- MALİYET -->
+  <section class="panel" data-panel="maliyet">
+    <div class="panel-head">
+      <div>
+        <h2>Maliyet</h2>
+        <p class="desc">Yeni hesap aç, formülasyonu seç — malzemeleri gramıyla otomatik dökülür. Her malzemeye ₺/kg fiyat gir (kütüphanedeki fiyat otomatik gelir), porsiyon maliyeti hesaplanır.</p>
+      </div>
+      <div class="head-btns">
+        <button class="btn ghost" onclick="exportCSV('maliyet')">CSV</button>
+        <button class="btn primary" onclick="openCost()">+ Maliyet hesabı</button>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Kod</th><th>Tarih</th><th>Malzeme sayısı</th><th>Toplam</th><th>Porsiyon maliyeti</th><th>Not</th><th></th></tr></thead>
+      <tbody id="tb-maliyet"></tbody>
+    </table></div>
+  </section>
+
+  <!-- RAPOR -->
+  <section class="panel" data-panel="rapor">
+    <div class="panel-head">
+      <div>
+        <h2>Rapor</h2>
+        <p class="desc">Bir formülasyon seç; malzeme, besin, LCA, maliyet ve duyusal sonuçları tek sayfada toplayan raporu üretir. Yazdır/PDF ile çıktı alabilirsin.</p>
+      </div>
+    </div>
+    <div class="report-pick">
+      <div class="field"><label>Formülasyon</label><select id="reportSelect" onchange="buildReport()"></select></div>
+      <button class="btn" onclick="window.print()">🖨 Yazdır / PDF</button>
+    </div>
+    <div id="reportOutput"><div class="empty"><div class="big">▤</div><p>Yukarıdan bir formülasyon seç.</p></div></div>
+  </section>
+</main>
+
+<!-- MAIN MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">Ekle</h3><button class="icon-btn" onclick="closeForm()" style="font-size:18px">✕</button></div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeForm()">Vazgeç</button>
+      <button class="btn primary" onclick="saveForm()" id="saveBtn">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<!-- INGREDIENT MODAL (stacked) -->
+<div class="overlay" id="overlay2">
+  <div class="modal narrow">
+    <div class="modal-head"><h3 id="ingTitle">Malzeme ekle</h3><button class="icon-btn" onclick="closeIng()" style="font-size:18px">✕</button></div>
+    <div class="modal-body" id="ingBody"></div>
+    <div class="modal-foot">
+      <button class="btn ghost" onclick="closeIng()">Vazgeç</button>
+      <button class="btn primary" onclick="saveIng()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============ Veri ============ */
+const KEY='hb_deney_defteri_v2';
+const TABS=[
+  {id:'malzeme',label:'Malzemeler',icon:'▤'},
+  {id:'formul',label:'Formülasyonlar',icon:'⚗'},
+  {id:'duyusal',label:'Duyusal',icon:'◉'},
+  {id:'maliyet',label:'Maliyet',icon:'₺'},
+  {id:'rapor',label:'Rapor',icon:'▦'},
+];
+const SEED=[
+  {name:'İstiridye mantarı (taze)',protein:3.3,fat:0.4,carb:6.1,fiber:2.3,kcal:33,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Tirmis fasulyesi (haşlanmış)',protein:15.6,fat:2.9,carb:9.9,fiber:2.8,kcal:119,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Patlıcan',protein:1.0,fat:0.2,carb:6.0,fiber:3.0,kcal:25,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Süt (tam yağlı)',protein:3.4,fat:3.6,carb:4.8,fiber:0,kcal:64,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Tereyağı',protein:0.9,fat:81,carb:0.1,fiber:0,kcal:717,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Buğday unu',protein:10,fat:1,carb:76,fiber:2.7,kcal:364,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Kaşar peyniri',protein:25,fat:27,carb:2,fiber:0,kcal:350,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+  {name:'Zeytinyağı',protein:0,fat:100,carb:0,fiber:0,kcal:884,co2:'',water:'',price:'',source:'Örnek — doğrulayın'},
+];
+let db=load();
+let editing={panel:null,id:null};
+let ingEditId=null;
+let costCtx={code:null};
+
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY));if(d)return normalize(d);}catch(e){}
+  const fresh={ingredients:SEED.map(s=>({id:uid(),...s})),formul:[],duyusal:[],maliyet:[]};
+  return fresh;
+}
+function normalize(d){['ingredients','formul','duyusal','maliyet'].forEach(k=>{if(!Array.isArray(d[k]))d[k]=[];});return d;}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(db));}catch(e){toast('Kaydedilemedi — depolama dolu olabilir');}}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){return(s??'').toString().replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function num(v){const n=parseFloat(v);return isNaN(n)?0:n;}
+function fmt(n,d=1){return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toLocaleString('tr-TR');}
+function findIng(name){if(!name)return null;const k=name.trim().toLocaleLowerCase('tr');return db.ingredients.find(i=>i.name.trim().toLocaleLowerCase('tr')===k)||null;}
+
+/* ============ Hesaplama ============ */
+function calcNutrition(items){
+  const t={protein:0,fat:0,carb:0,fiber:0,kcal:0};const missing=[];
+  items.forEach(it=>{const ing=findIng(it.ing);if(!ing){if(it.ing)missing.push(it.ing);return;}
+    const f=num(it.grams)/100;
+    t.protein+=num(ing.protein)*f;t.fat+=num(ing.fat)*f;t.carb+=num(ing.carb)*f;t.fiber+=num(ing.fiber)*f;t.kcal+=num(ing.kcal)*f;});
+  return{t,missing};
+}
+function calcLCA(items){
+  let co2=0,water=0;const missingFactor=[];const missingIng=[];
+  items.forEach(it=>{const ing=findIng(it.ing);if(!ing){if(it.ing)missingIng.push(it.ing);return;}
+    const kg=num(it.grams)/1000;
+    if(ing.co2===''||ing.water===''){missingFactor.push(ing.name);}
+    co2+=num(ing.co2)*kg;water+=num(ing.water)*kg;});
+  return{co2,water,missingFactor,missingIng};
+}
+function perServe(v,servings){const s=num(servings);return s>0?v/s:v;}
+
+/* ============ Tablo / sekme ============ */
+function buildTabs(){
+  document.getElementById('tabs').innerHTML=TABS.map((t,i)=>
+    `<button class="tab ${i===0?'active':''}" data-tab="${t.id}" onclick="switchTab('${t.id}')"><span>${t.icon}</span> ${t.label}${t.id!=='rapor'?` <span class="cnt" id="cnt-${t.id}">0</span>`:''}</button>`).join('');
+}
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.dataset.panel===id));
+  if(id==='rapor')refreshReportSelect();
+}
+function updateCounts(){['malzeme','formul','duyusal','maliyet'].forEach(k=>{const el=document.getElementById('cnt-'+k);if(el)el.textContent=(k==='malzeme'?db.ingredients:db[k]).length;});}
+function emptyRow(cols,msg){return`<tr><td colspan="${cols}"><div class="empty"><div class="big">◇</div><p>${msg}</p></div></td></tr>`;}
+function actions(fn,id){return`<div class="row-actions"><button class="icon-btn" title="Düzenle" onclick="${fn}('${id}')">✎</button><button class="icon-btn del" title="Sil" onclick="del_${fn.includes('Ing')?'ing':fn.replace('open','').toLowerCase()}('${id}')">🗑</button></div>`;}
+
+function renderAll(){renderMalzeme();renderFormul();renderDuyusal();renderMaliyet();updateCounts();}
+
+function renderMalzeme(){
+  const tb=document.getElementById('tb-malzeme');
+  document.getElementById('seedNote').style.display=db.ingredients.some(i=>i.source&&i.source.startsWith('Örnek'))?'block':'none';
+  if(!db.ingredients.length){tb.innerHTML=emptyRow(11,'Malzeme yok.');return;}
+  tb.innerHTML=db.ingredients.map(i=>`<tr>
+    <td><b>${esc(i.name)}</b></td>
+    <td class="num">${i.protein!==''?fmt(num(i.protein)):'—'}</td>
+    <td class="num">${i.fat!==''?fmt(num(i.fat)):'—'}</td>
+    <td class="num">${i.carb!==''?fmt(num(i.carb)):'—'}</td>
+    <td class="num">${i.fiber!==''?fmt(num(i.fiber)):'—'}</td>
+    <td class="num">${i.kcal!==''?fmt(num(i.kcal),0):'—'}</td>
+    <td class="num">${i.co2!==''?fmt(num(i.co2),2):'<span class="warn-inline">boş</span>'}</td>
+    <td class="num">${i.water!==''?fmt(num(i.water),0):'<span class="warn-inline">boş</span>'}</td>
+    <td class="num">${i.price!==''?fmt(num(i.price),2)+' ₺':'<span class="warn-inline">boş</span>'}</td>
+    <td class="mini">${esc(i.source)||'—'}</td>
+    <td><div class="row-actions"><button class="icon-btn" onclick="openIng('${i.id}')">✎</button><button class="icon-btn del" onclick="delIng('${i.id}')">🗑</button></div></td>
+  </tr>`).join('');
+}
+
+function renderFormul(){
+  const tb=document.getElementById('tb-formul');
+  if(!db.formul.length){tb.innerHTML=emptyRow(8,'Henüz formülasyon yok.');return;}
+  tb.innerHTML=db.formul.map(r=>{
+    const items=r.items||[];
+    const ing=items.filter(i=>i.ing).map(i=>`<b>${esc(i.ing)}</b> ${esc(i.grams)}g`).join('<br>')||'—';
+    const n=calcNutrition(items);const l=calcLCA(items);const s=num(r.servings)||1;
+    const besin=`P ${fmt(perServe(n.t.protein,s))} · Y ${fmt(perServe(n.t.fat,s))} · K ${fmt(perServe(n.t.carb,s))} · Lif ${fmt(perServe(n.t.fiber,s))} g<br><span class="mini">${fmt(perServe(n.t.kcal,s),0)} kcal/porsiyon</span>${n.missing.length?`<br><span class="warn-inline">${n.missing.length} malzeme kütüphanede yok</span>`:''}`;
+    const lca=`${fmt(perServe(l.co2,s),2)} kg CO₂e · ${fmt(perServe(l.water,s),0)} L su<br><span class="mini">porsiyon başına</span>${l.missingFactor.length?`<br><span class="warn-inline">${l.missingFactor.length} malzemede faktör boş</span>`:''}`;
+    return`<tr>
+      <td><span class="code-badge">${esc(r.code)}</span></td>
+      <td class="date-cell">${esc(r.date)}</td>
+      <td>${esc(r.desc)||'<span class="muted-cell">—</span>'}<div class="mini">${num(r.servings)||1} porsiyon</div></td>
+      <td class="mini">${ing}</td>
+      <td class="mini">${besin}</td>
+      <td class="mini">${lca}</td>
+      <td>${esc(r.result)||'<span class="muted-cell">—</span>'}</td>
+      <td><div class="row-actions"><button class="icon-btn" onclick="openForm('formul','${r.id}')">✎</button><button class="icon-btn del" onclick="delFormul('${r.id}')">🗑</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderDuyusal(){
+  const tb=document.getElementById('tb-duyusal');
+  if(!db.duyusal.length){tb.innerHTML=emptyRow(7,'Henüz duyusal oturum yok.');return;}
+  tb.innerHTML=db.duyusal.map(r=>{
+    const sc=(r.scores||[]).filter(s=>s.name);
+    const avg=sc.length?(sc.reduce((a,s)=>a+num(s.overall),0)/sc.length).toFixed(2):'—';
+    return`<tr>
+      <td><span class="code-badge">${esc(r.code)}</span></td>
+      <td class="date-cell">${esc(r.date)}</td>
+      <td><span class="tag">${esc(r.testType)||'—'}</span></td>
+      <td>${sc.length} kişi</td>
+      <td><b>${avg}</b> <span class="muted-cell" style="font-size:11px">/5</span></td>
+      <td class="mini">${esc(r.conditions)||'<span class="muted-cell">—</span>'}</td>
+      <td><div class="row-actions"><button class="icon-btn" onclick="openForm('duyusal','${r.id}')">✎</button><button class="icon-btn del" onclick="delDuyusal('${r.id}')">🗑</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderMaliyet(){
+  const tb=document.getElementById('tb-maliyet');
+  if(!db.maliyet.length){tb.innerHTML=emptyRow(7,'Henüz maliyet hesabı yok.');return;}
+  tb.innerHTML=db.maliyet.map(r=>{
+    const total=(r.lines||[]).reduce((a,l)=>a+num(l.lineCost),0);
+    const f=db.formul.find(x=>x.code===r.code);const s=f?num(f.servings)||1:1;
+    return`<tr>
+      <td><span class="code-badge">${esc(r.code)}</span></td>
+      <td class="date-cell">${esc(r.date)}</td>
+      <td>${(r.lines||[]).length}</td>
+      <td class="num"><b>${fmt(total,2)} ₺</b></td>
+      <td class="num">${fmt(total/s,2)} ₺</td>
+      <td class="mini">${esc(r.note)||'—'}</td>
+      <td><div class="row-actions"><button class="icon-btn" onclick="openCost('${r.id}')">✎</button><button class="icon-btn del" onclick="delMaliyet('${r.id}')">🗑</button></div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ============ Malzeme modalı ============ */
+function openIng(id,prefillName){
+  ingEditId=id||null;
+  const d=id?db.ingredients.find(i=>i.id===id):{name:prefillName||''};
+  document.getElementById('ingTitle').textContent=id?'Malzeme düzenle':'Malzeme ekle';
+  const f=(k,l,h='',step='0.1')=>`<div class="field"><label>${l}${h?` <span class="hint">${h}</span>`:''}</label><input id="ig_${k}" type="number" step="${step}" value="${esc(d[k]??'')}"></div>`;
+  document.getElementById('ingBody').innerHTML=`
+    <div class="field"><label>Malzeme adı *</label><input id="ig_name" value="${esc(d.name||'')}" placeholder="İstiridye mantarı"></div>
+    <div class="section-label">Besin — 100 g başına</div>
+    <div class="grid g3">${f('protein','Protein (g)')}${f('fat','Yağ (g)')}${f('carb','Karbonhidrat (g)')}${f('fiber','Lif (g)')}${f('kcal','Enerji (kcal)','','1')}</div>
+    <div class="section-label">Çevre & fiyat — kg başına</div>
+    <div class="grid g3">${f('co2','CO₂ (kg CO₂e/kg)','','0.01')}${f('water','Su (L/kg)','','1')}${f('price','Fiyat (₺/kg)','','0.01')}</div>
+    <div class="field full"><label>Kaynak <span class="hint">besin tablosu / LCA çalışması — savunma için</span></label><input id="ig_source" value="${esc(d.source||'')}" placeholder="TÜBER / Poore & Nemecek (2018)"></div>`;
+  document.getElementById('overlay2').classList.add('open');
+}
+function closeIng(){document.getElementById('overlay2').classList.remove('open');ingEditId=null;}
+function saveIng(){
+  const g=k=>{const e=document.getElementById('ig_'+k);return e?e.value.trim():'';};
+  const name=g('name');if(!name){toast('Malzeme adı zorunlu');return;}
+  const rec={name,protein:g('protein'),fat:g('fat'),carb:g('carb'),fiber:g('fiber'),kcal:g('kcal'),co2:g('co2'),water:g('water'),price:g('price'),source:g('source')};
+  if(ingEditId){const i=db.ingredients.findIndex(x=>x.id===ingEditId);rec.id=ingEditId;db.ingredients[i]=rec;toast('Malzeme güncellendi');}
+  else{rec.id=uid();db.ingredients.push(rec);toast('Malzeme eklendi');}
+  save();renderMalzeme();updateCounts();closeIng();
+  if(editing.panel==='formul')recalcFormModal(); // formülasyon modalı açıksa yeniden hesapla
+}
+function delIng(id){if(!confirm('Malzeme silinsin mi?'))return;db.ingredients=db.ingredients.filter(i=>i.id!==id);save();renderMalzeme();updateCounts();toast('Silindi');}
+
+/* ============ Formülasyon / Duyusal modalı ============ */
+function today(){return new Date().toISOString().slice(0,10);}
+function ingDatalist(){return`<datalist id="ingNames">${db.ingredients.map(i=>`<option value="${esc(i.name)}">`).join('')}</datalist>`;}
+function codeDatalist(){const s=[...new Set(db.formul.map(f=>f.code).filter(Boolean))].sort();return`<datalist id="codes">${s.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>`;}
+
+function openForm(panel,id){
+  editing={panel,id:id||null};
+  const rec=id?db[panel].find(r=>r.id===id):null;
+  const titles={formul:'Formülasyon',duyusal:'Duyusal oturum'};
+  document.getElementById('modalTitle').textContent=(id?'Düzenle · ':'Yeni · ')+titles[panel];
+  document.getElementById('modalBody').innerHTML=formHTML(panel,rec);
+  document.getElementById('overlay').classList.add('open');
+  if(panel==='formul')recalcFormModal();
+}
+function closeForm(){document.getElementById('overlay').classList.remove('open');editing={panel:null,id:null};}
+function val(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+
+function formHTML(panel,d){
+  d=d||{};
+  const codeField=`<div class="field"><label>Örnek kodu *<span class="hint">tüm bölümlerde ortak anahtar</span></label><input class="mono-in" id="f_code" list="codes" value="${esc(d.code||'')}" placeholder="HB-01" autocomplete="off"></div>${codeDatalist()}`;
+  const dateField=`<div class="field"><label>Tarih *</label><input type="date" id="f_date" value="${esc(d.date||today())}"></div>`;
+  if(panel==='formul'){
+    const items=(d.items&&d.items.length?d.items:[{ing:'',grams:''}]);
+    return`<div class="grid g3">${codeField}${dateField}
+      <div class="field"><label>Porsiyon sayısı</label><input id="f_servings" type="number" min="1" step="1" value="${esc(d.servings||4)}" oninput="recalcFormModal()"></div></div>
+      <div class="field full"><label>Kısa açıklama</label><input id="f_desc" value="${esc(d.desc||'')}" placeholder="ör. mantar oranı artırıldı, tereyağı çıkarıldı"></div>
+      <div class="section-label">Malzemeler (kütüphaneden seç · gram)</div>
+      <div id="ingList">${items.map(i=>ingRow(i)).join('')}</div>
+      <button type="button" class="add-line" onclick="addIngRow()">+ Malzeme satırı</button>
+      ${ingDatalist()}
+      <div class="calc-box" id="calcBox"></div>
+      <div class="section-label">Mantar işleme</div>
+      <div class="grid">
+        <div class="field"><label>Kurutma (sıcaklık / süre)</label><input id="f_dryTemp" value="${esc(d.dryTemp||'')}" placeholder="55°C / 6 saat"></div>
+        <div class="field"><label>Kıyma boyutu</label><input id="f_mince" value="${esc(d.mince||'')}" placeholder="ince / kaba"></div>
+        <div class="field full"><label>Ön pişirme</label><input id="f_precook" value="${esc(d.precook||'')}" placeholder="tavada 4 dk, orta ateş"></div>
+      </div>
+      <div class="section-label">Tirmis işleme</div>
+      <div class="grid">
+        <div class="field"><label>Acılık giderme</label><input id="f_debitter" value="${esc(d.debitter||'')}" placeholder="2 gün suda + kaynatma"></div>
+        <div class="field"><label>Islatma süresi</label><input id="f_soak" value="${esc(d.soak||'')}" placeholder="24 saat"></div>
+        <div class="field full"><label>Püre kıvamı</label><input id="f_puree" value="${esc(d.puree||'')}" placeholder="beşamel kıvamında"></div>
+      </div>
+      <div class="section-label">Sonuç</div>
+      <div class="field full"><label>Pişirme notu + ne işe yaradı/yaramadı</label><textarea id="f_result" placeholder="ör. doku iyi ama beşamel akışkan kaldı, tirmis %10 azaltılmalı">${esc(d.result||'')}</textarea></div>`;
+  }
+  if(panel==='duyusal'){
+    const sc=(d.scores&&d.scores.length?d.scores:[{name:'',appearance:'',color:'',odor:'',flavor:'',texture:'',overall:''}]);
+    return`<div class="grid">${codeField}${dateField}
+      <div class="field"><label>Test tipi</label><select id="f_testType">${['Hedonik (1-5)','Duo-trio','Üçgen (triangle)','Tanımlayıcı','Diğer'].map(o=>`<option ${d.testType===o?'selected':''}>${o}</option>`).join('')}</select></div>
+      <div class="field"><label>Servis / test koşulları</label><input id="f_conditions" value="${esc(d.conditions||'')}" placeholder="60°C servis, 3 haneli kod"></div></div>
+      <div class="section-label">Panelist HAM puanları (1–5)</div>
+      <div class="score-grid"><div class="score-head">Panelist</div><div class="score-head">Görünüş</div><div class="score-head">Renk</div><div class="score-head">Koku</div><div class="score-head">Lezzet</div><div class="score-head">Doku</div><div class="score-head">Genel</div></div>
+      <div id="scoreList">${sc.map((s,x)=>scoreRow(s,x)).join('')}</div>
+      <button type="button" class="add-line" onclick="addScore()">+ Panelist satırı</button>`;
+  }
+}
+function ingRow(i){
+  return`<div class="rep-row"><input placeholder="Malzeme" list="ingNames" value="${esc(i.ing||'')}" data-f="ing" oninput="recalcFormModal()"><input class="g" placeholder="gram" value="${esc(i.grams||'')}" data-f="grams" oninput="recalcFormModal()"><button type="button" class="rm" onclick="this.parentElement.remove();recalcFormModal()">✕</button></div>`;
+}
+function addIngRow(){document.getElementById('ingList').insertAdjacentHTML('beforeend',ingRow({}));}
+function readFormItems(){return[...document.querySelectorAll('#ingList .rep-row')].map(r=>({ing:r.querySelector('[data-f=ing]').value.trim(),grams:r.querySelector('[data-f=grams]').value.trim()})).filter(i=>i.ing||i.grams);}
+function recalcFormModal(){
+  const box=document.getElementById('calcBox');if(!box)return;
+  const items=readFormItems();const s=num(val('f_servings'))||1;
+  const n=calcNutrition(items);const l=calcLCA(items);
+  const stat=(k,v,u)=>`<div class="stat"><div class="k">${k}</div><div class="v">${v} <span class="u">${u}</span></div></div>`;
+  let miss='';
+  const allMissing=[...new Set(n.missing)];
+  if(allMissing.length){miss+=`<div class="calc-missing">⚠ Kütüphanede olmayan malzemeler — besin/LCA'ya katılmadı:<br>${allMissing.map(m=>`<button type="button" class="chip-add" onclick="openIng(null,'${esc(m).replace(/'/g,"\\'")}')">+ ${esc(m)} ekle</button>`).join('')}</div>`;}
+  if(l.missingFactor.length){const mf=[...new Set(l.missingFactor)];miss+=`<div class="calc-missing">♻ CO₂/su faktörü boş olan malzemeler LCA'ya eksik girdi: <b>${mf.map(esc).join(', ')}</b> — Malzemeler sekmesinden faktörleri gir.</div>`;}
+  box.innerHTML=`<h4>⚗ Otomatik hesap · porsiyon başına (${s} porsiyon)</h4>
+    <div class="calc-grid">
+      ${stat('Protein',fmt(perServe(n.t.protein,s)),'g')}
+      ${stat('Yağ',fmt(perServe(n.t.fat,s)),'g')}
+      ${stat('Karbonhidrat',fmt(perServe(n.t.carb,s)),'g')}
+      ${stat('Lif',fmt(perServe(n.t.fiber,s)),'g')}
+      ${stat('Enerji',fmt(perServe(n.t.kcal,s),0),'kcal')}
+      ${stat('CO₂',fmt(perServe(l.co2,s),2),'kg')}
+      ${stat('Su',fmt(perServe(l.water,s),0),'L')}
+    </div>${miss}`;
+}
+function scoreRow(s,x){const f=k=>`<input type="number" min="1" max="5" step="1" value="${esc(s[k]||'')}" data-sc="${k}">`;
+  return`<div class="score-grid"><input value="${esc(s.name||('P'+(x+1)))}" data-sc="name">${f('appearance')}${f('color')}${f('odor')}${f('flavor')}${f('texture')}${f('overall')}</div>`;}
+function addScore(){const n=document.querySelectorAll('#scoreList .score-grid').length;document.getElementById('scoreList').insertAdjacentHTML('beforeend',scoreRow({name:'P'+(n+1)},n));}
+
+function saveForm(){
+  const p=editing.panel;const rec={};rec.code=val('f_code');
+  if(!rec.code){toast('Örnek kodu zorunlu');return;}
+  if(p==='formul'){
+    Object.assign(rec,{date:val('f_date'),servings:val('f_servings')||'1',desc:val('f_desc'),dryTemp:val('f_dryTemp'),mince:val('f_mince'),precook:val('f_precook'),debitter:val('f_debitter'),soak:val('f_soak'),puree:val('f_puree'),result:val('f_result'),items:readFormItems()});
+  }
+  if(p==='duyusal'){
+    Object.assign(rec,{date:val('f_date'),testType:val('f_testType'),conditions:val('f_conditions')});
+    rec.scores=[...document.querySelectorAll('#scoreList .score-grid')].map(g=>{const o={};g.querySelectorAll('[data-sc]').forEach(i=>o[i.dataset.sc]=i.value.trim());return o;}).filter(s=>s.name);
+  }
+  if(editing.id){const i=db[p].findIndex(r=>r.id===editing.id);rec.id=editing.id;db[p][i]=rec;toast('Güncellendi');}
+  else{rec.id=uid();db[p].push(rec);toast('Kaydedildi');}
+  save();renderAll();closeForm();
+}
+function delFormul(id){if(!confirm('Formülasyon silinsin mi?'))return;db.formul=db.formul.filter(r=>r.id!==id);save();renderAll();toast('Silindi');}
+function delDuyusal(id){if(!confirm('Oturum silinsin mi?'))return;db.duyusal=db.duyusal.filter(r=>r.id!==id);save();renderAll();toast('Silindi');}
+
+/* ============ Maliyet modalı ============ */
+function openCost(id){
+  costCtx={id:id||null};
+  const rec=id?db.maliyet.find(m=>m.id===id):null;
+  document.getElementById('modalTitle').textContent=id?'Maliyet düzenle':'Yeni maliyet hesabı';
+  editing={panel:'maliyet',id:id||null};
+  const opts=db.formul.map(f=>`<option value="${esc(f.code)}" ${rec&&rec.code===f.code?'selected':''}>${esc(f.code)} — ${esc(f.desc||'')}</option>`).join('');
+  document.getElementById('modalBody').innerHTML=`
+    ${db.formul.length?'':'<div class="calc-missing">Önce Formülasyonlar sekmesinden en az bir formülasyon ekle.</div>'}
+    <div class="field"><label>Formülasyon seç *</label><select id="c_code" onchange="fillCostLines()"><option value="">— seç —</option>${opts}</select></div>
+    <div id="costLines"></div>
+    <div class="field full" style="margin-top:6px"><label>Not</label><input id="c_note" value="${esc(rec?rec.note:'')}" placeholder="ör. mevsimlik fiyat, toptan alım"></div>`;
+  document.getElementById('overlay').classList.add('open');
+  if(rec){document.getElementById('c_code').value=rec.code;fillCostLines(rec.lines);}
+}
+function fillCostLines(saved){
+  const code=document.getElementById('c_code').value;const wrap=document.getElementById('costLines');
+  if(!code){wrap.innerHTML='';return;}
+  const f=db.formul.find(x=>x.code===code);if(!f){wrap.innerHTML='';return;}
+  const items=(f.items||[]).filter(i=>i.ing);
+  if(!items.length){wrap.innerHTML='<div class="calc-missing">Bu formülasyonda malzeme yok.</div>';return;}
+  const rowsHtml=items.map(it=>{
+    const ing=findIng(it.ing);
+    let price='';
+    if(saved){const sl=saved.find(s=>s.ing===it.ing);if(sl)price=sl.pricePerKg;}
+    if(price===''&&ing&&ing.price!=='')price=ing.price;
+    return`<div class="rep-row" data-line>
+      <input value="${esc(it.ing)}" data-ci="ing" readonly style="flex:2;background:#F6F1F6">
+      <input class="g" value="${esc(it.grams)}" data-ci="grams" readonly style="background:#F6F1F6"><span style="font-size:11px;color:var(--muted)">g</span>
+      <input class="g" type="number" step="0.01" placeholder="₺/kg" value="${esc(price)}" data-ci="price" oninput="recalcCost()" style="max-width:120px">
+    </div>`;
+  }).join('');
+  wrap.innerHTML=`<div class="section-label">Malzeme fiyatları (₺/kg)</div>${rowsHtml}<div class="calc-box" id="costTotal"></div>`;
+  recalcCost();
+}
+function recalcCost(){
+  const code=document.getElementById('c_code').value;const f=db.formul.find(x=>x.code===code);if(!f)return;
+  const s=num(f.servings)||1;let total=0;
+  document.querySelectorAll('#costLines .rep-row[data-line]').forEach(r=>{
+    const g=num(r.querySelector('[data-ci=grams]').value);const p=num(r.querySelector('[data-ci=price]').value);
+    total+=(g/1000)*p;});
+  document.getElementById('costTotal').innerHTML=`<h4>₺ Toplam maliyet</h4><div class="calc-grid"><div class="stat"><div class="k">Reçete toplamı</div><div class="v">${fmt(total,2)} <span class="u">₺</span></div></div><div class="stat"><div class="k">Porsiyon (${s})</div><div class="v">${fmt(total/s,2)} <span class="u">₺</span></div></div></div>`;
+}
+function saveCost(){
+  const code=document.getElementById('c_code').value;if(!code){toast('Formülasyon seç');return;}
+  const lines=[...document.querySelectorAll('#costLines .rep-row[data-line]')].map(r=>{
+    const ing=r.querySelector('[data-ci=ing]').value;const grams=r.querySelector('[data-ci=grams]').value;const pricePerKg=r.querySelector('[data-ci=price]').value.trim();
+    const lineCost=(num(grams)/1000)*num(pricePerKg);
+    return{ing,grams,pricePerKg,lineCost};});
+  const rec={code,date:today(),lines,note:val('c_note')};
+  if(costCtx.id){const i=db.maliyet.findIndex(m=>m.id===costCtx.id);rec.id=costCtx.id;rec.date=db.maliyet[i].date;db.maliyet[i]=rec;toast('Güncellendi');}
+  else{rec.id=uid();db.maliyet.push(rec);toast('Maliyet kaydedildi');}
+  save();renderMaliyet();updateCounts();closeForm();
+}
+function delMaliyet(id){if(!confirm('Maliyet kaydı silinsin mi?'))return;db.maliyet=db.maliyet.filter(m=>m.id!==id);save();renderMaliyet();updateCounts();toast('Silindi');}
+
+/* override saveForm dispatch for cost */
+const _saveForm=saveForm;
+saveForm=function(){if(editing.panel==='maliyet'){saveCost();return;}_saveForm();};
+
+/* ============ Rapor ============ */
+function refreshReportSelect(){
+  const sel=document.getElementById('reportSelect');const cur=sel.value;
+  sel.innerHTML='<option value="">— formülasyon seç —</option>'+db.formul.map(f=>`<option value="${esc(f.code)}">${esc(f.code)} — ${esc(f.desc||'')}</option>`).join('');
+  if([...sel.options].some(o=>o.value===cur))sel.value=cur;
+}
+function buildReport(){
+  const code=document.getElementById('reportSelect').value;const out=document.getElementById('reportOutput');
+  if(!code){out.innerHTML='<div class="empty"><div class="big">▤</div><p>Yukarıdan bir formülasyon seç.</p></div>';return;}
+  const f=db.formul.find(x=>x.code===code);if(!f){out.innerHTML='';return;}
+  const s=num(f.servings)||1;const items=(f.items||[]).filter(i=>i.ing);
+  const n=calcNutrition(items);const l=calcLCA(items);
+  const cost=db.maliyet.find(m=>m.code===code);
+  const totalCost=cost?(cost.lines||[]).reduce((a,x)=>a+num(x.lineCost),0):null;
+  const sens=db.duyusal.filter(d=>d.code===code);
+  const st=(k,v,u)=>`<div class="stat"><div class="k">${k}</div><div class="v">${v} <span class="u">${u}</span></div></div>`;
+
+  let sensBlock='<p class="mini">Bu kod için duyusal oturum kaydı yok.</p>';
+  if(sens.length){
+    const attrs=['appearance','color','odor','flavor','texture','overall'];const labels=['Görünüş','Renk','Koku','Lezzet','Doku','Genel'];
+    const all=[];sens.forEach(o=>(o.scores||[]).forEach(sc=>{if(sc.name)all.push(sc);}));
+    const avgs=attrs.map(a=>{const v=all.filter(x=>x[a]!=='').map(x=>num(x[a]));return v.length?(v.reduce((p,c)=>p+c,0)/v.length):null;});
+    sensBlock=`<p class="mini">${sens.length} oturum · ${all.length} değerlendirme</p><div class="rep-stats">${labels.map((lab,i)=>st(lab,avgs[i]!==null?fmt(avgs[i],2):'—','/5')).join('')}</div>`;
+  }
+
+  out.innerHTML=`
+    <h3>${esc(f.code)} — Deney Raporu</h3>
+    <p class="rep-sub">${esc(f.desc||'')} · ${esc(f.date)} · ${s} porsiyon</p>
+
+    <div class="rep-sec">Malzemeler</div>
+    <div class="tbl-wrap" style="box-shadow:none"><table><thead><tr><th>Malzeme</th><th>Miktar (g)</th><th>Kütüphanede</th></tr></thead><tbody>
+      ${items.length?items.map(it=>`<tr><td>${esc(it.ing)}</td><td class="num">${esc(it.grams)}</td><td>${findIng(it.ing)?'<span class="tag">evet</span>':'<span class="warn-inline">yok</span>'}</td></tr>`).join(''):'<tr><td colspan="3" class="mini">Malzeme yok.</td></tr>'}
+    </tbody></table></div>
+
+    <div class="rep-sec">Besin değeri (porsiyon başına)</div>
+    <div class="rep-stats">
+      ${st('Protein',fmt(perServe(n.t.protein,s)),'g')}${st('Yağ',fmt(perServe(n.t.fat,s)),'g')}${st('Karbonhidrat',fmt(perServe(n.t.carb,s)),'g')}${st('Lif',fmt(perServe(n.t.fiber,s)),'g')}${st('Enerji',fmt(perServe(n.t.kcal,s),0),'kcal')}
+    </div>
+    ${n.missing.length?`<p class="rep-warn">⚠ Kütüphanede olmayan malzemeler hesaba katılmadı: ${[...new Set(n.missing)].map(esc).join(', ')}</p>`:''}
+    <p class="mini" style="margin-top:6px">Reçete toplamı: P ${fmt(n.t.protein)} · Y ${fmt(n.t.fat)} · K ${fmt(n.t.carb)} · Lif ${fmt(n.t.fiber)} g · ${fmt(n.t.kcal,0)} kcal</p>
+
+    <div class="rep-sec">Sürdürülebilirlik (LCA · porsiyon başına)</div>
+    <div class="rep-stats">${st('Karbon ayak izi',fmt(perServe(l.co2,s),2),'kg CO₂e')}${st('Su ayak izi',fmt(perServe(l.water,s),0),'L')}</div>
+    ${l.missingFactor.length?`<p class="rep-warn">⚠ CO₂/su faktörü girilmemiş malzemeler eksik hesaplandı: ${[...new Set(l.missingFactor)].map(esc).join(', ')}</p>`:''}
+
+    <div class="rep-sec">Maliyet</div>
+    ${totalCost!==null?`<div class="rep-stats">${st('Reçete',fmt(totalCost,2),'₺')}${st('Porsiyon',fmt(totalCost/s,2),'₺')}</div>`:'<p class="mini">Bu kod için maliyet hesabı yok. Maliyet sekmesinden ekle.</p>'}
+
+    <div class="rep-sec">Duyusal analiz</div>
+    ${sensBlock}
+
+    <div class="rep-sec">İşleme parametreleri</div>
+    <dl class="kv">
+      <dt>Mantar — kurutma</dt><dd>${esc(f.dryTemp)||'—'}</dd>
+      <dt>Mantar — kıyma</dt><dd>${esc(f.mince)||'—'}</dd>
+      <dt>Mantar — ön pişirme</dt><dd>${esc(f.precook)||'—'}</dd>
+      <dt>Tirmis — acılık giderme</dt><dd>${esc(f.debitter)||'—'}</dd>
+      <dt>Tirmis — ıslatma</dt><dd>${esc(f.soak)||'—'}</dd>
+      <dt>Tirmis — püre</dt><dd>${esc(f.puree)||'—'}</dd>
+    </dl>
+
+    <div class="rep-sec">Sonuç / not</div>
+    <p style="font-size:13px">${esc(f.result)||'—'}</p>`;
+}
+
+/* ============ Dışa / içe ============ */
+function download(name,content,type){const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);}
+function exportAllJSON(){download('deney-defteri-yedek-'+today()+'.json',JSON.stringify(db,null,2),'application/json');toast('Yedek indirildi');}
+function importJSON(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{db=normalize(JSON.parse(r.result));save();renderAll();refreshReportSelect();toast('Veriler geri yüklendi');}catch(e){toast('Dosya okunamadı');}};r.readAsText(f);ev.target.value='';}
+function csvCell(v){v=(v??'').toString();return/[",\n;]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function toCSV(rows){return'\uFEFF'+rows.map(r=>r.map(csvCell).join(';')).join('\r\n');}
+function exportCSV(panel){
+  let rows=[];
+  if(panel==='malzeme'){rows.push(['Malzeme','Protein/100g','Yağ/100g','Karbonhidrat/100g','Lif/100g','kcal/100g','CO2 (kg/kg)','Su (L/kg)','Fiyat (₺/kg)','Kaynak']);db.ingredients.forEach(i=>rows.push([i.name,i.protein,i.fat,i.carb,i.fiber,i.kcal,i.co2,i.water,i.price,i.source]));}
+  if(panel==='formul'){rows.push(['Kod','Tarih','Porsiyon','Açıklama','Malzemeler','Protein/porsiyon','Yağ/porsiyon','Karbonhidrat/porsiyon','Lif/porsiyon','kcal/porsiyon','CO2/porsiyon','Su/porsiyon','Sonuç']);
+    db.formul.forEach(r=>{const s=num(r.servings)||1;const n=calcNutrition(r.items||[]);const l=calcLCA(r.items||[]);
+      rows.push([r.code,r.date,s,r.desc,(r.items||[]).map(i=>i.ing+' '+i.grams+'g').join(' | '),fmt(perServe(n.t.protein,s)),fmt(perServe(n.t.fat,s)),fmt(perServe(n.t.carb,s)),fmt(perServe(n.t.fiber,s)),fmt(perServe(n.t.kcal,s),0),fmt(perServe(l.co2,s),3),fmt(perServe(l.water,s),0),r.result]);});}
+  if(panel==='duyusal'){rows.push(['Kod','Tarih','Test tipi','Koşullar','Panelist','Görünüş','Renk','Koku','Lezzet','Doku','Genel']);db.duyusal.forEach(r=>(r.scores||[]).forEach(s=>rows.push([r.code,r.date,r.testType,r.conditions,s.name,s.appearance,s.color,s.odor,s.flavor,s.texture,s.overall])));}
+  if(panel==='maliyet'){rows.push(['Kod','Tarih','Malzeme','Miktar(g)','Fiyat(₺/kg)','Satır maliyeti(₺)','Not']);db.maliyet.forEach(r=>(r.lines||[]).forEach(l=>rows.push([r.code,r.date,l.ing,l.grams,l.pricePerKg,fmt(num(l.lineCost),2),r.note])));}
+  if(rows.length<=1){toast('Aktarılacak kayıt yok');return;}
+  download(panel+'-'+today()+'.csv',toCSV(rows),'text/csv;charset=utf-8');toast('CSV indirildi');
+}
+
+/* ============ UI ============ */
+let toastT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeForm();});
+document.getElementById('overlay2').addEventListener('click',e=>{if(e.target.id==='overlay2')closeIng();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('overlay2').classList.contains('open'))closeIng();else closeForm();}});
+
+buildTabs();renderAll();refreshReportSelect();
+</script>
+</body>
+</html>
